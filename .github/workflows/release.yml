@@ -27,14 +27,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mybinary-${{ matrix.platform }}
-          path: target/${{ matrix.platform }}/release/mybinary
+          path: target/${{ matrix.platform }}/release/KeyResolve
 
   # release:
   #   needs: build
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Download artifacts
-  #       uses: actions/download-artifact@v3
+  #       uses: actions/download-artifact@v4
   #       with:
   #         path: ./dist
 
