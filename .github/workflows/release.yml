@@ -20,8 +20,7 @@ jobs:
           target: ${{ matrix.platform }}
           override: true
 
-      # Install cross-compilation tools if building for ARM
-      - name: Install cross-compilation tools
+      - name: Install cross-compilation tools for ARM
         if: matrix.platform == 'aarch64-unknown-linux-gnu'
         run: |
           sudo apt update
@@ -29,6 +28,8 @@ jobs:
 
       - name: Build
         run: cargo build --release --target ${{ matrix.platform }}
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
