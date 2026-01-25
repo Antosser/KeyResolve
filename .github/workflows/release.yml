@@ -2,6 +2,8 @@ name: Build and Release
 
 on:
   push:
+    tags:
+      - "v*.*.*" # Trigger on version tags
 
 jobs:
   build:
@@ -37,17 +39,17 @@ jobs:
           name: KeyResolve-${{ matrix.platform }}
           path: target/${{ matrix.platform }}/release/KeyResolve
 
-  # release:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Download artifacts
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         path: ./dist
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./dist
 
-  #     - name: Create GitHub Release
-  #       uses: ncipollo/release-action@v1
-  #       with:
-  #         artifacts: ./dist/*
-  #         tag: ${{ github.ref_name }}
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./dist/*
+          tag: ${{ github.ref_name }}
