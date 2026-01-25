@@ -1,0 +1,45 @@
+name: Build and Release
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [x86_64-unknown-linux-gnu, aarch64-unknown-linux-gnu]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.platform }}
+          override: true
+
+      - name: Build
+        run: cargo build --release --target ${{ matrix.platform }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: mybinary-${{ matrix.platform }}
+          path: target/${{ matrix.platform }}/release/mybinary
+
+  # release:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Download artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         path: ./dist
+
+  #     - name: Create GitHub Release
+  #       uses: ncipollo/release-action@v1
+  #       with:
+  #         artifacts: ./dist/*
+  #         tag: ${{ github.ref_name }}
